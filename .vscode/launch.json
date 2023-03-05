@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AuthenticatorApplication<authenticator>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.sitake.authenticator.AuthenticatorApplication",
+            "projectName": "authenticator",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
