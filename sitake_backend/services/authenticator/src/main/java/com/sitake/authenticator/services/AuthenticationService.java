@@ -17,6 +17,8 @@ import com.sitake.authenticator.models.authenticateDto.AuthenticateResponse;
 import com.sitake.authenticator.models.loginDto.LoginRequest;
 import com.sitake.authenticator.models.loginDto.LoginResponse;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -26,38 +28,53 @@ public class AuthenticationService {
     // ini nanti ditaro key vault
     String secretKey = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
 
-    public AuthenticateResponse authenticateToken(AuthenticateRequest authenticateRequest) {
+    Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secretKey),
+            SignatureAlgorithm.HS256.getJcaName());
 
-        AuthenticateResponse authenticateResponse = AuthenticateResponse.builder().isTokenValid(false)
-                .jwtToken("sdfgsderger").build();
+    public AuthenticateResponse authenticateToken(AuthenticateRequest authenticateRequest)
+            throws UnsupportedEncodingException {
+
+        Jws<Claims> claims = validateJwt(authenticateRequest.getJwtToken(), hmacKey);
+
+        String jwtToken = generateJwtToken(claims.getBody().getSubject(), hmacKey);
+
+        AuthenticateResponse authenticateResponse = AuthenticateResponse.builder().isTokenValid(true)
+                .jwtToken(jwtToken).build();
 
         return authenticateResponse;
     }
 
     public LoginResponse authenticateUser(LoginRequest loginRequest) throws UnsupportedEncodingException {
 
-        String jwtToken = jwtGenerator("nanda keren", secretKey);
+        String jwtToken = generateJwtToken("nanda", hmacKey);
 
         LoginResponse loginResponse = LoginResponse.builder().jwtToken(jwtToken).build();
 
         return loginResponse;
     }
 
-    private String jwtGenerator(String name, String secret) throws UnsupportedEncodingException {
+    private Jws<Claims> validateJwt(String jwtToken, Key key) {
 
-        Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret), 
-                            SignatureAlgorithm.HS256.getJcaName());
+        Jws<Claims> jwt = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jwtToken);
+
+        return jwt;
+    }
+
+    private String generateJwtToken(String name, Key key) throws UnsupportedEncodingException {
 
         Instant now = Instant.now();
         String jwtToken = Jwts.builder()
-        .setIssuer("sitake")
-        .claim("name", name)
-        .setSubject(name)
-        .setId(UUID.randomUUID().toString())
-        .setIssuedAt(Date.from(now))
-        .setExpiration(Date.from(now.plus(5l, ChronoUnit.MINUTES)))
-        .signWith(hmacKey)
-        .compact();
+                .setIssuer("sitake")
+                .claim("nama", name)
+                .setSubject(name)
+                .setId(UUID.randomUUID().toString())
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plus(5l, ChronoUnit.MINUTES)))
+                .signWith(key)
+                .compact();
         return jwtToken;
     }
 
