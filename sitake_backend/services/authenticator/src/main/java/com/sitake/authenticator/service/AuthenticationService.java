@@ -1,4 +1,4 @@
-package com.sitake.authenticator.services;
+package com.sitake.authenticator.service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
@@ -12,10 +12,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.stereotype.Service;
 
-import com.sitake.authenticator.models.authenticateDto.AuthenticateRequest;
-import com.sitake.authenticator.models.authenticateDto.AuthenticateResponse;
-import com.sitake.authenticator.models.loginDto.LoginRequest;
-import com.sitake.authenticator.models.loginDto.LoginResponse;
+import com.sitake.authenticator.model.authenticateDto.AuthenticateRequest;
+import com.sitake.authenticator.model.authenticateDto.AuthenticateResponse;
+import com.sitake.authenticator.model.loginDto.LoginRequest;
+import com.sitake.authenticator.model.loginDto.LoginResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

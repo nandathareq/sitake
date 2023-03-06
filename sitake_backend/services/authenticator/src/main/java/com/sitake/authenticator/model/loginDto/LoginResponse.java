@@ -1,4 +1,4 @@
-package com.sitake.authenticator.models.loginDto;
+package com.sitake.authenticator.model.loginDto;
 
 import lombok.Builder;
 import lombok.Getter;

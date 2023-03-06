@@ -8,27 +8,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitake.authenticator.models.authenticateDto.AuthenticateRequest;
-import com.sitake.authenticator.models.loginDto.LoginRequest;
-import com.sitake.authenticator.models.registerDto.RegisterRequest;
-import com.sitake.authenticator.models.registerDto.RegisterResponse;
-import com.sitake.authenticator.services.AuthenticationService;
+import com.sitake.authenticator.model.authenticateDto.AuthenticateRequest;
+import com.sitake.authenticator.model.loginDto.LoginRequest;
+import com.sitake.authenticator.model.registerDto.RegisterRequest;
+import com.sitake.authenticator.service.AuthenticationService;
+import com.sitake.authenticator.service.RegisterService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/authenticator/")
+@RequestMapping("/v1/authenticator")
 public class AuthenticatorController {
+
+    @Autowired
+    RegisterService registerService;
 
     @Autowired
     AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
-        RegisterResponse registerResponse = RegisterResponse.builder().message("aksjdhgfkdjsf").build();
+        try {
+            return new ResponseEntity<>(registerService.registerUser(registerRequest), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(registerResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")

@@ -1,4 +1,4 @@
-package com.sitake.authenticator.models.registerDto;
+package com.sitake.authenticator.model.authenticateDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,9 +12,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RegisterRequest {
-
-    private String nama;
-    private String password;
-    private String nik;
+public class AuthenticateRequest {
+    private String jwtToken;
 }

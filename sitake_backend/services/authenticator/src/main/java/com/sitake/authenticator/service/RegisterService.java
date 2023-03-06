@@ -1,13 +1,13 @@
-package com.sitake.authenticator.services;
+package com.sitake.authenticator.service;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sitake.authenticator.models.entity.User;
-import com.sitake.authenticator.models.registerDto.RegisterRequest;
-import com.sitake.authenticator.models.registerDto.RegisterResponse;
+import com.sitake.authenticator.model.entity.User;
+import com.sitake.authenticator.model.registerDto.RegisterRequest;
+import com.sitake.authenticator.model.registerDto.RegisterResponse;
 import com.sitake.authenticator.repository.UserRepository;
 
 @Service

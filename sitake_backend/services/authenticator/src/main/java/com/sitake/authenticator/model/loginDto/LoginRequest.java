@@ -1,4 +1,4 @@
-package com.sitake.authenticator.models.authenticateDto;
+package com.sitake.authenticator.model.loginDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthenticateRequest {
-    private String jwtToken;
+public class LoginRequest {
+    private String nik;
+    private String password;
 }

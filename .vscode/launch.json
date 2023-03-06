@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "AuthenticatorApplication",
+            "request": "launch",
+            "mainClass": "com.sitake.AuthenticatorApplication",
+            "projectName": "authenticator"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-AuthenticatorApplication<authenticator>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

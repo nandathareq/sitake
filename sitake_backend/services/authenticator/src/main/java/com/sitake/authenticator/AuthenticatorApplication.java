@@ -1,23 +1,24 @@
 package com.sitake.authenticator;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
-import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
-import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.sitake.authenticator.model.entity.User;
 
 @SpringBootApplication
 public class AuthenticatorApplication {
+
+	private static DynamoDBMapper dynamoDBMapper;
+
+	@Autowired
+    private static AmazonDynamoDB amazonDynamoDB;
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -32,31 +33,13 @@ public class AuthenticatorApplication {
 	}
 
 	private static void createDynamoDB() throws InterruptedException {
-		AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-		client.setEndpoint("http://localhost:8000");
-
-		List<AttributeDefinition> attributeDefinitions = new ArrayList<AttributeDefinition>();
-		attributeDefinitions.add(new AttributeDefinition()
-				.withAttributeName("Id").withAttributeType("N"));
-
-		attributeDefinitions.add(new AttributeDefinition()
-				.withAttributeName("Nik").withAttributeType("S"));
-
-		List<KeySchemaElement> keySchema = new ArrayList<KeySchemaElement>();
-		keySchema.add(new KeySchemaElement().withAttributeName("Id")
-				.withKeyType(KeyType.HASH));
-		keySchema.add(new KeySchemaElement().withAttributeName("Nik")
-				.withKeyType(KeyType.RANGE));
-
-		CreateTableRequest request = new CreateTableRequest()
-				.withTableName("User")
-				.withKeySchema(keySchema)
-				.withAttributeDefinitions(attributeDefinitions)
-				.withProvisionedThroughput(new ProvisionedThroughput()
-						.withReadCapacityUnits(10L)
-						.withWriteCapacityUnits(10L));
-
-		client.createTable(request);
+		dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
+        
+        CreateTableRequest tableRequest = dynamoDBMapper
+          .generateCreateTableRequest(User.class);
+        tableRequest.setProvisionedThroughput(
+          new ProvisionedThroughput(1L, 1L));
+        amazonDynamoDB.createTable(tableRequest);
 
 	}
 
